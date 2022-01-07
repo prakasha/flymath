@@ -1,0 +1,85 @@
+<script>
+    class Timer {
+        constructor() {
+            this.isRunning = false;
+            this.startTime = 0;
+            this.overallTime = 0;
+        }
+
+        _getTimeElapsedSinceLastStart() {
+            if (!this.startTime) {
+                return 0;
+            }
+            return Date.now() - this.startTime;
+        }
+
+        start() {
+            if (this.isRunning) {
+                return console.error('Timer is already running');
+            }
+            this.isRunning = true;
+            this.startTime = Date.now();
+        }
+
+        stop() {
+            if (!this.isRunning) {
+                return console.error('Timer is already stopped');
+            }
+            this.isRunning = false;
+            this.overallTime = this.overallTime + this._getTimeElapsedSinceLastStart();
+        }
+
+        reset() {
+            this.overallTime = 0;
+            if (this.isRunning) {
+                this.startTime = Date.now();
+                return;
+            }
+            this.startTime = 0;
+        }
+
+        getTime() {
+            if (!this.startTime) {
+                return 0;
+            }
+            if (this.isRunning) {
+                return this.overallTime + this._getTimeElapsedSinceLastStart();
+            }
+            return this.overallTime;
+        }
+    }
+
+    function secondsToHms(d) {
+        d = Number(d);
+        var h = Math.floor(d / 3600);
+        var m = Math.floor(d % 3600 / 60);
+        var s = Math.floor(d % 3600 % 60);
+
+        var hDisplay = h > 0 ? h + (h == 1 ? "h, " : " h, ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? "m, " : "m, ") : "";
+        var sDisplay = s > 0 ? s + (s == 1 ? "s" : "s") : "";
+        return hDisplay + mDisplay + sDisplay;
+    }
+    const timer = new Timer();
+    function startTimer() {
+        timer.start();
+        setInterval(() => {
+            const timeInSeconds = Math.round(timer.getTime() / 1000);
+            document.getElementById('time').innerText = secondsToHms(timeInSeconds);
+        }, 100)
+    }
+
+    function stopTimer() {
+        timer.stop();
+    }
+
+</script>
+<p>
+    <span id="time" style="padding-right: '5px';"></span>
+    <button onclick="startTimer()">start</button>
+    <button onclick="stopTimer()">stop</button>
+</p>
+
+<iframe src="https://helpingwithmath.com/generators/5nbt5-multiplication01/" width="100%" height="90%"
+    title="description ">
+</iframe>
